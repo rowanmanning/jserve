@@ -1,0 +1,38 @@
+{
+    "name": "jserve",
+    "version": "0.0.0",
+    "private": true,
+
+    "description": "Serve up JSON files",
+    "keywords": [ "json", "server" ],
+    "author": "Rowan Manning (http://rowanmanning.com/)",
+
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/rowanmanning/jserve.git"
+    },
+    "homepage": "https://github.com/rowanmanning/jserve",
+    "bugs": "https://github.com/rowanmanning/jserve/issues",
+    "license": "MIT",
+
+    "engines": {
+        "node": ">=0.10"
+    },
+    "dependencies": {},
+    "devDependencies": {
+        "jshint": "^2",
+        "jscs": "^2",
+        "mocha": "^2",
+        "mockery": "~1.4",
+        "proclaim": "^3",
+        "sinon": "^1"
+    },
+
+    "main": "./lib/jserve.js",
+    "bin": {
+        "jserve": "./bin/jserve"
+    },
+    "scripts": {
+        "test": "make ci"
+    }
+}
