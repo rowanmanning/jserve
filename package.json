@@ -18,7 +18,10 @@
     "engines": {
         "node": ">=0.10"
     },
-    "dependencies": {},
+    "dependencies": {
+        "connect": "~3.4",
+        "extend": "~3.0"
+    },
     "devDependencies": {
         "istanbul": "~0.3",
         "jshint": "^2",
@@ -31,7 +34,7 @@
 
     "main": "./lib/jserve.js",
     "bin": {
-        "jserve": "./bin/jserve"
+        "jserve": "./bin/jserve.js"
     },
     "scripts": {
         "test": "make ci"
