@@ -20,6 +20,7 @@
     },
     "dependencies": {},
     "devDependencies": {
+        "istanbul": "~0.3",
         "jshint": "^2",
         "jscs": "^2",
         "mocha": "^2",
