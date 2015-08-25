@@ -20,7 +20,10 @@
     },
     "dependencies": {
         "connect": "~3.4",
-        "extend": "~3.0"
+        "extend": "~3.0",
+        "glob": "~5.0",
+        "hogan.js": "~3.0",
+        "statuses": "~1.2"
     },
     "devDependencies": {
         "istanbul": "~0.3",
