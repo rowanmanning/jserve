@@ -81,10 +81,6 @@ describe('lib/jserve', function () {
             assert.isFunction(defaults.log.info);
         });
 
-        it('should have a `log.warn` method', function () {
-            assert.isFunction(defaults.log.warn);
-        });
-
         it('should have a `path` property', function () {
             assert.strictEqual(defaults.path, process.cwd() + '/json');
         });
@@ -105,8 +101,7 @@ describe('lib/jserve', function () {
                 log: {
                     debug: sinon.spy(),
                     error: sinon.spy(),
-                    info: sinon.spy(),
-                    warn: sinon.spy()
+                    info: sinon.spy()
                 },
                 path: __dirname + '/../mock',
                 port: 1234
