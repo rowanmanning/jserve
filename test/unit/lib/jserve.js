@@ -477,6 +477,7 @@ describe('lib/jserve', function () {
                 it('should render the error page with the expected context', function () {
                     assert.calledOnce(errorTemplate.render);
                     assert.deepEqual(errorTemplate.render.firstCall.args[0], {
+                        is404: false,
                         statusCode: error.status,
                         statusMessage: statusMessages[error.status],
                         stackTrace: error.stack
@@ -521,7 +522,13 @@ describe('lib/jserve', function () {
                 it('should return the expected object when called with a file path', function () {
                     assert.deepEqual(jserveApp.buildFileObject(options.path + '/foo/bar/baz.JSON'), {
                         extension: 'json',
+                        fullPath: options.path + '/foo/bar/baz.JSON',
                         name: 'foo/bar/baz',
+                        nameSplit: [
+                            'foo',
+                            'bar',
+                            'baz'
+                        ],
                         url: '/foo/bar/baz'
                     });
                 });
