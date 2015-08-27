@@ -8,7 +8,7 @@ var path = require('path');
 var sinon = require('sinon');
 
 describe('lib/jserve', function () {
-    var connect, extend, fs, glob, hogan, jserve, statusMessages;
+    var connect, extend, fs, glob, hogan, jserve, serveStatic, statusMessages;
 
     beforeEach(function () {
 
@@ -26,6 +26,9 @@ describe('lib/jserve', function () {
 
         hogan = require('../mock/hogan');
         mockery.registerMock('hogan.js', hogan);
+
+        serveStatic = require('../mock/serve-static');
+        mockery.registerMock('serve-static', serveStatic);
 
         statusMessages = {
             404: 'foo',
@@ -89,6 +92,10 @@ describe('lib/jserve', function () {
             assert.strictEqual(defaults.port, process.env.PORT || 3000);
         });
 
+        it('should have a `templatesPath` property', function () {
+            assert.strictEqual(defaults.templatesPath, path.resolve(__dirname, '..', '..', '..', 'template'));
+        });
+
     });
 
     describe('jserve()', function () {
@@ -104,11 +111,12 @@ describe('lib/jserve', function () {
                     info: sinon.spy()
                 },
                 path: __dirname + '/../mock',
-                port: 1234
+                port: 1234,
+                templatesPath: '/can-haz-templates'
             };
 
-            fs.readFileSync.withArgs(path.resolve(__dirname, '..', '..', '..', 'template', 'index.html'), 'utf-8').returns('index content');
-            fs.readFileSync.withArgs(path.resolve(__dirname, '..', '..', '..', 'template', 'error.html'), 'utf-8').returns('error content');
+            fs.readFileSync.withArgs(path.resolve('/can-haz-templates/index.html'), 'utf-8').returns('index content');
+            fs.readFileSync.withArgs(path.resolve('/can-haz-templates/error.html'), 'utf-8').returns('error content');
 
             errorTemplate = {
                 render: sinon.stub()
@@ -144,8 +152,20 @@ describe('lib/jserve', function () {
             assert.strictEqual(jserveApp.templates.index, indexTemplate);
         });
 
+        it('should create a serve-static middleware with the expected options', function () {
+            assert.calledOnce(serveStatic);
+            assert.alwaysCalledWith(serveStatic, path.resolve('/can-haz-templates/public'));
+            assert.deepEqual(serveStatic.firstCall.args[1], {
+                index: false
+            });
+        });
+
         it('should use the `logRequest` method as middleware in the Connect application', function () {
             assert.calledWith(connect.mockReturn.use, jserveApp.logRequest);
+        });
+
+        it('should use the `serveStaticFiles` method as middleware in the Connect application', function () {
+            assert.calledWith(connect.mockReturn.use, jserveApp.serveStaticFiles);
         });
 
         it('should use the `removeExtension` method as middleware in the Connect application', function () {
@@ -170,6 +190,7 @@ describe('lib/jserve', function () {
 
         it('should use the middleware in the correct order', function () {
             assert.callOrder(
+                connect.mockReturn.use.withArgs(jserveApp.serveStaticFiles),
                 connect.mockReturn.use.withArgs(jserveApp.logRequest),
                 connect.mockReturn.use.withArgs(jserveApp.removeExtension),
                 connect.mockReturn.use.withArgs(jserveApp.serveIndex),
@@ -394,6 +415,10 @@ describe('lib/jserve', function () {
                     assert.calledOnce(next);
                 });
 
+            });
+
+            it('should have a `serveStaticFiles` method set to the created serve-static middleware', function () {
+                assert.strictEqual(jserveApp.serveStaticFiles, serveStatic.mockReturn);
             });
 
             it('should have a `handleNotFoundError` method', function () {

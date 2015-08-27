@@ -26,6 +26,10 @@ program
         '-i, --indentation <level>',
         'The number of spaces or tabs to use for JSON indentation'
     )
+    .option(
+        '-t, --templates <path>',
+        'The path to look for template files in'
+    )
     .parse(process.argv);
 
 if (program.indentation) {
@@ -41,6 +45,10 @@ if (program.json && !/^[\/\~]/.test(program.json)) {
     program.json = path.resolve(process.cwd(), program.json);
 }
 
+if (program.templates && !/^[\/\~]/.test(program.templates)) {
+    program.templates = path.resolve(process.cwd(), program.templates);
+}
+
 var app = jserve({
     contentType: program.contentType,
     indentation: program.indentation,
@@ -50,7 +58,8 @@ var app = jserve({
         info: logInfo
     },
     path: program.json,
-    port: program.port
+    port: program.port,
+    templatesPath: program.templates
 });
 
 app.start();

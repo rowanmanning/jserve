@@ -25,6 +25,7 @@
         "extend": "~3.0",
         "glob": "~5.0",
         "hogan.js": "~3.0",
+        "serve-static": "~1.10",
         "statuses": "~1.2"
     },
     "devDependencies": {
