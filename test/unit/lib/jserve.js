@@ -343,6 +343,17 @@ describe('lib/jserve', function () {
                     });
                 });
 
+                it('should set the response status to 200', function () {
+                    assert.calledOnce(response.writeHead);
+                    assert.calledWith(response.writeHead, 200);
+                });
+
+                it('should set the Content-Type header to "text/html"', function () {
+                    assert.calledOnce(response.writeHead);
+                    assert.isObject(response.writeHead.firstCall.args[1]);
+                    assert.strictEqual(response.writeHead.firstCall.args[1]['Content-Type'], 'text/html');
+                });
+
                 it('should send the render output', function () {
                     assert.calledOnce(response.end);
                     assert.calledWithExactly(response.end, html);
@@ -486,7 +497,13 @@ describe('lib/jserve', function () {
 
                 it('should set the response status based on the error status', function () {
                     assert.calledOnce(response.writeHead);
-                    assert.calledWithExactly(response.writeHead, error.status);
+                    assert.calledWith(response.writeHead, error.status);
+                });
+
+                it('should set the Content-Type header to "text/html"', function () {
+                    assert.calledOnce(response.writeHead);
+                    assert.isObject(response.writeHead.firstCall.args[1]);
+                    assert.strictEqual(response.writeHead.firstCall.args[1]['Content-Type'], 'text/html');
                 });
 
                 it('should send the render output', function () {
@@ -499,7 +516,7 @@ describe('lib/jserve', function () {
                     errorTemplate.render.reset();
                     response.writeHead.reset();
                     jserveApp.handleServerError(error, {}, response);
-                    assert.calledWithExactly(response.writeHead, 500);
+                    assert.calledWith(response.writeHead, 500);
                     assert.strictEqual(errorTemplate.render.firstCall.args[0].statusCode, 500);
                     assert.strictEqual(errorTemplate.render.firstCall.args[0].statusMessage, statusMessages[500]);
                 });

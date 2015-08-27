@@ -35,6 +35,7 @@
         "mocha": "^2",
         "mockery": "~1.4",
         "proclaim": "^3",
+        "request": "2.61",
         "sinon": "^1"
     },
 
