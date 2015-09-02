@@ -18,6 +18,16 @@ describeCall([], function () {
         });
     });
 
+    it('should serve JavaScript files', function (done) {
+        request(this.baseUrl + '/requires', function (error, response, body) {
+            assert.isNull(error);
+            assert.strictEqual(response.statusCode, 200);
+            assert.strictEqual(response.headers['content-type'], 'application/json');
+            assert.strictEqual(body, '{\n    "require": true,\n    "foo1": {\n        "foo": "bar"\n    },\n    "foo2": {\n        "foo": "bar"\n    },\n    "foo3": {\n        "foo": "bar"\n    }\n}');
+            done();
+        });
+    });
+
     it('should serve an index page', function (done) {
         request(this.baseUrl, function (error, response) {
             assert.isNull(error);
