@@ -12,19 +12,19 @@ program
     .usage('[options]')
     .option(
         '-p, --port <port>',
-        'the port to run on'
+        'the port to run on. Default: 3000'
     )
     .option(
         '-j, --json <path>',
-        'the path to look for JSON files in'
+        'the path to look for JSON files in. Default: ./json'
     )
     .option(
         '-c, --content-type <content-type>',
-        'the Content-Type header to send when serving JSON'
+        'the Content-Type header to send when serving JSON. Default: application/json'
     )
     .option(
         '-i, --indentation <level>',
-        'The number of spaces or tabs to use for JSON indentation'
+        'The number of spaces or tabs to use for JSON indentation. Default: 4'
     )
     .option(
         '-t, --templates <path>',
