@@ -83,6 +83,10 @@ describe('lib/jserve', function () {
             assert.isFunction(defaults.log.info);
         });
 
+        it('should have a `middleware` property', function () {
+            assert.deepEqual(defaults.middleware, []);
+        });
+
         it('should have a `path` property', function () {
             assert.strictEqual(defaults.path, process.cwd() + '/json');
         });
@@ -98,9 +102,12 @@ describe('lib/jserve', function () {
     });
 
     describe('jserve()', function () {
-        var errorTemplate, indexTemplate, jserveApp, options, userOptions;
+        var errorTemplate, indexTemplate, jserveApp, middleware1, middleware2, options, userOptions;
 
         beforeEach(function () {
+            middleware1 = sinon.spy();
+            middleware2 = sinon.spy();
+
             userOptions = {
                 contentType: 'foo-content-type',
                 indentation: 3,
@@ -109,6 +116,10 @@ describe('lib/jserve', function () {
                     error: sinon.spy(),
                     info: sinon.spy()
                 },
+                middleware: [
+                    middleware1,
+                    middleware2
+                ],
                 path: path.resolve(__dirname + '/../mock'),
                 port: 1234,
                 templatesPath: '/can-haz-templates'
@@ -171,6 +182,11 @@ describe('lib/jserve', function () {
             assert.calledWith(connect.mockReturn.use, jserveApp.removeExtension);
         });
 
+        it('should use all of the middleware in `options.middleware` in the Connect application', function () {
+            assert.calledWith(connect.mockReturn.use, middleware1);
+            assert.calledWith(connect.mockReturn.use, middleware2);
+        });
+
         it('should use the `serveIndex` method as middleware in the Connect application', function () {
             assert.calledWith(connect.mockReturn.use, jserveApp.serveIndex);
         });
@@ -192,6 +208,8 @@ describe('lib/jserve', function () {
                 connect.mockReturn.use.withArgs(jserveApp.serveStaticFiles),
                 connect.mockReturn.use.withArgs(jserveApp.logRequest),
                 connect.mockReturn.use.withArgs(jserveApp.removeExtension),
+                connect.mockReturn.use.withArgs(middleware1),
+                connect.mockReturn.use.withArgs(middleware2),
                 connect.mockReturn.use.withArgs(jserveApp.serveIndex),
                 connect.mockReturn.use.withArgs(jserveApp.serveJson),
                 connect.mockReturn.use.withArgs(jserveApp.handleNotFoundError),

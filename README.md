@@ -164,6 +164,23 @@ var app = jserve({
 });
 ```
 
+### `middleware`
+
+_Array_. An array of [Connect][connect] middleware which will be run before the index and JSON serving parts of JServe. Along with the `template` option, this allows you to extend JServe easily with functionality of your own. Default: `[]`.
+
+```js
+var app = jserve({
+    middleware: [
+        function (request, response, next) {
+            if (request.path === '/hello') {
+                return response.end('Hello World!');
+            }
+            next();
+        }
+    ]
+});
+```
+
 ### `path`
 
 _String_. The path to look for JSON and JavaScript files in. It's best to set this to an absolute path. Default: `./json`.
@@ -209,6 +226,7 @@ Copyright &copy; 2015, Rowan Manning
 
 
 
+[connect]: https://github.com/senchalabs/connect
 [mustache]: https://mustache.github.io/
 [npm]: https://www.npmjs.com/
 
