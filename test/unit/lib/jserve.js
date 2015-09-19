@@ -409,8 +409,6 @@ describe('lib/jserve', function () {
                         writeHead: sinon.spy(),
                         end: sinon.spy()
                     };
-                    jserveApp.loadJsonFile = sinon.stub().yields(null, jsonData);
-                    jserveApp.loadJavaScriptFile = sinon.stub().yields(null, jsonData);
                 });
 
                 describe('with a JSON file', function () {
@@ -418,11 +416,6 @@ describe('lib/jserve', function () {
                     beforeEach(function () {
                         request.path = '/foo/bar';
                         jserveApp.serveJson(request, response, next);
-                    });
-
-                    it('should call `loadJsonFile` with the expected path', function () {
-                        assert.calledOnce(jserveApp.loadJsonFile);
-                        assert.calledWith(jserveApp.loadJsonFile, path.resolve(__dirname, '../mock/foo/bar.json'));
                     });
 
                     it('should send a 200 status code', function () {
@@ -450,12 +443,11 @@ describe('lib/jserve', function () {
                         assert.calledOnce(next);
                     });
 
-                    it('should callback with an error if `loadJsonFile` errors', function () {
-                        var error = new Error('...');
-                        jserveApp.loadJsonFile = sinon.stub().yields(error);
+                    it('should callback with an error if the file contains errors', function () {
+                        request.path = '/foo/json-error';
                         jserveApp.serveJson(request, response, next);
                         assert.calledOnce(next);
-                        assert.calledWithExactly(next, error);
+                        assert.instanceOf(next.firstCall.args[0], Error);
                     });
 
                 });
@@ -467,11 +459,6 @@ describe('lib/jserve', function () {
                         jserveApp.serveJson(request, response, next);
                     });
 
-                    it('should call `loadJavaScriptFile` with the expected path', function () {
-                        assert.calledOnce(jserveApp.loadJavaScriptFile);
-                        assert.calledWith(jserveApp.loadJavaScriptFile, path.resolve(__dirname, '../mock/foo/baz.js'));
-                    });
-
                     it('should send a 200 status code', function () {
                         assert.calledOnce(response.writeHead);
                         assert.calledWith(response.writeHead, 200);
@@ -484,7 +471,7 @@ describe('lib/jserve', function () {
 
                     it('should send the json output as a string (respecting the `indentation` option)', function () {
                         assert.calledOnce(response.end);
-                        assert.calledWithExactly(response.end, '{\n   "foo": "bar"\n}');
+                        assert.calledWithExactly(response.end, '{\n   "bar": "baz"\n}');
                     });
 
                     it('should not callback', function () {
@@ -497,178 +484,6 @@ describe('lib/jserve', function () {
                         assert.calledOnce(next);
                     });
 
-                    it('should callback with an error if `loadJavaScriptFile` errors', function () {
-                        var error = new Error('...');
-                        jserveApp.loadJavaScriptFile = sinon.stub().yields(error);
-                        jserveApp.serveJson(request, response, next);
-                        assert.calledOnce(next);
-                        assert.calledWithExactly(next, error);
-                    });
-
-                });
-
-            });
-
-            it('should have a `loadJsonFile` method', function () {
-                assert.isFunction(jserveApp.loadJsonFile);
-            });
-
-            describe('.loadJsonFile()', function () {
-                var notFoundError;
-
-                beforeEach(function () {
-                    notFoundError = new Error('not found');
-                    fs.readFile.withArgs('ok.json', 'utf-8').yieldsAsync(null, '{"ok":true}');
-                    fs.readFile.withArgs('malformed.json', 'utf-8').yieldsAsync(null, '{malformed:true}');
-                    fs.readFile.withArgs('not.json', 'utf-8').yieldsAsync(notFoundError);
-                });
-
-                it('should callback with JSON data', function (done) {
-                    jserveApp.loadJsonFile('ok.json', function (error, jsonData) {
-                        assert.isNull(error);
-                        assert.deepEqual(jsonData, {
-                            ok: true
-                        });
-                        done();
-                    });
-                });
-
-                it('should callback with an error if the JSON file is malformed', function (done) {
-                    jserveApp.loadJsonFile('malformed.json', function (error, jsonData) {
-                        assert.instanceOf(error, SyntaxError);
-                        assert.isUndefined(jsonData);
-                        done();
-                    });
-                });
-
-                it('should callback with an error if the JSON file cannot be loaded', function (done) {
-                    jserveApp.loadJsonFile('not.json', function (error, jsonData) {
-                        assert.strictEqual(error, notFoundError);
-                        assert.isUndefined(jsonData);
-                        done();
-                    });
-                });
-
-            });
-
-            it('should have a `loadJavaScriptFile` method', function () {
-                assert.isFunction(jserveApp.loadJavaScriptFile);
-            });
-
-            describe('.loadJavaScriptFile()', function () {
-                var malformedError, notFoundError;
-
-                beforeEach(function () {
-                    notFoundError = new Error('not found');
-                    malformedError = new Error('malformed');
-                    fs.readFile.withArgs('ok.js', 'utf-8').yieldsAsync(null, 'ok content');
-                    fs.readFile.withArgs('malformed.js', 'utf-8').yieldsAsync(null, 'malformed content');
-                    fs.readFile.withArgs('not.js', 'utf-8').yieldsAsync(notFoundError);
-                    vm.runInNewContext.withArgs('ok content').returns({ok: true});
-                    vm.runInNewContext.withArgs('malformed content').throws(malformedError);
-                });
-
-                it('should run the JavaScript in a new VM context with a sandbox', function (done) {
-                    jserveApp.loadJavaScriptFile('ok.js', function () {
-                        assert.calledOnce(vm.runInNewContext);
-                        assert.calledWith(vm.runInNewContext, 'ok content');
-                        assert.isObject(vm.runInNewContext.firstCall.args[1]);
-                        done();
-                    });
-                });
-
-                describe('VM sandbox', function () {
-                    var sandbox;
-
-                    beforeEach(function (done) {
-                        jserveApp.loadJavaScriptFile('ok.js', function () {
-                            sandbox = vm.runInNewContext.firstCall.args[1];
-                            done();
-                        });
-                    });
-
-                    it('should have a `__dirname` property set to `options.path`', function () {
-                        assert.strictEqual(sandbox.__dirname, options.path);
-                    });
-
-                    it('should have a `__filename` property set to the JavaScript file path', function () {
-                        assert.strictEqual(sandbox.__filename, 'ok.js');
-                    });
-
-                    it('should have a `console` property set to the console object', function () {
-                        assert.strictEqual(sandbox.console, console);
-                    });
-
-                    it('should have a `module.exports` property set to an empty object', function () {
-                        assert.deepEqual(sandbox.module, {
-                            exports: {}
-                        });
-                    });
-
-                    it('should have a `require` method', function () {
-                        assert.isFunction(sandbox.require);
-                    });
-
-                    it('should have a `require.resolve` method', function () {
-                        assert.isFunction(sandbox.require.resolve);
-                    });
-
-                    describe('.require()', function () {
-
-                        beforeEach(function () {
-                            sandbox.require.resolve = sinon.stub().withArgs('./foo/bar').returns(__dirname + '/../mock/foo/bar.json');
-                        });
-
-                        it('should require and return the resolved module', function () {
-                            assert.deepEqual(sandbox.require('./foo/bar'), {
-                                foo: 'bar'
-                            });
-                        });
-
-                    });
-
-                    describe('.require.resolve()', function () {
-
-                        it('should resolve and return absolute paths correctly', function () {
-                            var module = __dirname + '/../mock/foo/bar.json';
-                            var expected = path.resolve(__dirname + '/../mock/foo/bar.json');
-                            assert.strictEqual(sandbox.require.resolve(module), expected);
-                        });
-
-                        it('should resolve and return relative paths relative to `options.path`', function () {
-                            var module = './foo/bar.json';
-                            var expected = path.resolve(__dirname + '/../mock/foo/bar.json');
-                            assert.strictEqual(sandbox.require.resolve(module), expected);
-                        });
-
-                    });
-
-                });
-
-                it('should callback with JSON data', function (done) {
-                    jserveApp.loadJavaScriptFile('ok.js', function (error, jsonData) {
-                        assert.isNull(error);
-                        assert.deepEqual(jsonData, {
-                            ok: true
-                        });
-                        done();
-                    });
-                });
-
-                it('should callback with an error if the JSON file is malformed', function (done) {
-                    jserveApp.loadJavaScriptFile('malformed.js', function (error, jsonData) {
-                        assert.strictEqual(error, malformedError);
-                        assert.isUndefined(jsonData);
-                        done();
-                    });
-                });
-
-                it('should callback with an error if the JSON file cannot be loaded', function (done) {
-                    jserveApp.loadJavaScriptFile('not.js', function (error, jsonData) {
-                        assert.strictEqual(error, notFoundError);
-                        assert.isUndefined(jsonData);
-                        done();
-                    });
                 });
 
             });

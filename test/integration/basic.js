@@ -28,6 +28,16 @@ describeCall([], function () {
         });
     });
 
+    it('should serve JavaScript files in sub-directories', function (done) {
+        request(this.baseUrl + '/subdir/requires', function (error, response, body) {
+            assert.isNull(error);
+            assert.strictEqual(response.statusCode, 200);
+            assert.strictEqual(response.headers['content-type'], 'application/json');
+            assert.strictEqual(body, '{\n    "require": true,\n    "foo": {\n        "foo": "bar"\n    },\n    "bar": {\n        "bar": "baz"\n    }\n}');
+            done();
+        });
+    });
+
     it('should serve an index page', function (done) {
         request(this.baseUrl, function (error, response) {
             assert.isNull(error);
