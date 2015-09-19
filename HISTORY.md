@@ -1,6 +1,10 @@
 
 # History
 
+## 1.1.2 (2015-09-19)
+
+  * Simplify the way files are loaded and fix sub-directory bugs
+
 ## 1.1.1 (2015-09-16)
 
   * Add Node.js 4.0.0 support
