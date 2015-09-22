@@ -1,6 +1,11 @@
 
 # History
 
+## 1.2.0 (2015-09-23)
+
+  * Add instructional text to the index page
+  * Add name and description options
+
 ## 1.1.2 (2015-09-19)
 
   * Simplify the way files are loaded and fix sub-directory bugs
