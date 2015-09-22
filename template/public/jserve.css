@@ -21,6 +21,13 @@ h1:last-child {
     margin-bottom: 0;
 }
 
+p {
+    margin-bottom: 22px;
+}
+.error-page p {
+    margin-bottom: 0;
+}
+
 a {
     color: #647a34;
 }
