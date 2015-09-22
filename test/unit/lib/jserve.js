@@ -63,6 +63,10 @@ describe('lib/jserve', function () {
             assert.strictEqual(defaults.contentType, 'application/json');
         });
 
+        it('should have a `description` property', function () {
+            assert.strictEqual(defaults.description, 'View JSON files by clicking the file names below:');
+        });
+
         it('should have an `indentation` property', function () {
             assert.strictEqual(defaults.indentation, 4);
         });
@@ -85,6 +89,10 @@ describe('lib/jserve', function () {
 
         it('should have a `middleware` property', function () {
             assert.deepEqual(defaults.middleware, []);
+        });
+
+        it('should have a `name` property', function () {
+            assert.strictEqual(defaults.name, 'JServe');
         });
 
         it('should have a `path` property', function () {
@@ -110,6 +118,7 @@ describe('lib/jserve', function () {
 
             userOptions = {
                 contentType: 'foo-content-type',
+                description: 'foo-description',
                 indentation: 3,
                 log: {
                     debug: sinon.spy(),
@@ -120,6 +129,7 @@ describe('lib/jserve', function () {
                     middleware1,
                     middleware2
                 ],
+                name: 'foo-name',
                 path: path.resolve(__dirname + '/../mock'),
                 port: 1234,
                 templatesPath: '/can-haz-templates'
@@ -352,6 +362,8 @@ describe('lib/jserve', function () {
                 it('should render the index page with the expected context', function () {
                     assert.calledOnce(indexTemplate.render);
                     assert.deepEqual(indexTemplate.render.firstCall.args[0], {
+                        name: 'foo-name',
+                        description: 'foo-description',
                         files: [
                             'foo-built-file',
                             'bar-built-file',
@@ -548,6 +560,8 @@ describe('lib/jserve', function () {
                 it('should render the error page with the expected context', function () {
                     assert.calledOnce(errorTemplate.render);
                     assert.deepEqual(errorTemplate.render.firstCall.args[0], {
+                        name: 'foo-name',
+                        description: 'foo-description',
                         is404: false,
                         statusCode: error.status,
                         statusMessage: statusMessages[error.status],

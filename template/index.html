@@ -3,7 +3,7 @@
 <head>
 
     <meta charset="utf-8"/>
-    <title>JServe</title>
+    <title>{{name}}</title>
     <meta name="robots" content="noindex"/>
 
     <!--[if gt IE 7]><!-->
@@ -18,9 +18,11 @@
 
     <div class="page">
 
-        <h1>JServe</h1>
+        <h1>{{name}}</h1>
 
-        <p>View JSON files by clicking the file names below:</p>
+        {{#description}}
+            <p>{{description}}</p>
+        {{/description}}
 
         <div role="main">
             <ul class="file-listing">

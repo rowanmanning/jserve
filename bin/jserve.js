@@ -30,6 +30,11 @@ program
         '-t, --templates <path>',
         'The path to look for template files in'
     )
+    .option(
+        '-n, --name <name>',
+        'The name of the server, used in template headings. Default: JServe',
+        'JServe'
+    )
     .parse(process.argv);
 
 if (program.indentation) {
@@ -57,6 +62,7 @@ var app = jserve({
         error: logError,
         info: logInfo
     },
+    name: program.name,
     path: program.json,
     port: program.port,
     templatesPath: program.templates

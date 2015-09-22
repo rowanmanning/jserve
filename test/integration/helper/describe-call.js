@@ -38,7 +38,7 @@ function describeCall (args, describeBlock) {
             this.process.stdout.on('data', function (data) {
                 stdout += data.toString();
                 // Listen for the startup
-                if (data.toString().indexOf('JServe started on') === 0) {
+                if (data.toString().indexOf('started on') !== -1) {
                     callDone();
                 }
             });

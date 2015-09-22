@@ -39,28 +39,31 @@ describeCall([], function () {
     });
 
     it('should serve an index page', function (done) {
-        request(this.baseUrl, function (error, response) {
+        request(this.baseUrl, function (error, response, body) {
             assert.isNull(error);
             assert.strictEqual(response.statusCode, 200);
             assert.strictEqual(response.headers['content-type'], 'text/html');
+            assert.match(body, /<title>JServe<\/title>/);
             done();
         });
     });
 
     it('should serve a 404 page', function (done) {
-        request(this.baseUrl + '/404', function (error, response) {
+        request(this.baseUrl + '/404', function (error, response, body) {
             assert.isNull(error);
             assert.strictEqual(response.statusCode, 404);
             assert.strictEqual(response.headers['content-type'], 'text/html');
+            assert.match(body, /<title>JServe Error 404: Not Found<\/title>/);
             done();
         });
     });
 
     it('should serve a 500 page', function (done) {
-        request(this.baseUrl + '/500', function (error, response) {
+        request(this.baseUrl + '/500', function (error, response, body) {
             assert.isNull(error);
             assert.strictEqual(response.statusCode, 500);
             assert.strictEqual(response.headers['content-type'], 'text/html');
+            assert.match(body, /<title>JServe Error 500: Internal Server Error<\/title>/);
             done();
         });
     });

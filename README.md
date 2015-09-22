@@ -76,6 +76,7 @@ This installs the `jserve` command-line tool:
     -c, --content-type <content-type>  the Content-Type header to send when serving JSON. Default: application/json
     -i, --indentation <level>          The number of spaces or tabs to use for JSON indentation. Default: 4
     -t, --templates <path>             The path to look for template files in
+    -n, --name <name>                  The name of the server, used in template headings. Default: JServe
 ```
 
 Run JServe on port `1234`:
@@ -140,6 +141,16 @@ var app = jserve({
 });
 ```
 
+### `description`
+
+_String_. The descriptive text which appears above the file list in the index page. Default: `View JSON files by clicking the file names below:`.
+
+```js
+var app = jserve({
+    description: 'Try one of these on for size:'
+});
+```
+
 ### `indentation`
 
 _Number_ or _String. The indentation level to use for output JSON. If set to a number, indentation will be set to that number of spaces. If set to a string, the given string will be used to indent. Default: `4`.
@@ -178,6 +189,16 @@ var app = jserve({
             next();
         }
     ]
+});
+```
+
+### `name`
+
+_String_. The name of the server, which appears in page titles and the logs. Default: `JServe`.
+
+```js
+var app = jserve({
+    name: 'My JSON'
 });
 ```
 
