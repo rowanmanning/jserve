@@ -2,9 +2,15 @@
 # Language/versions
 language: node_js
 node_js:
-  - "4.0"
+  - "4"
   - "0.12"
   - "0.10"
 
+# Before install
+before_install:
+  - npm install coveralls
+
 # Build script
-script: make ci
+script:
+  - make ci
+  - cat ./coverage/lcov.info | ./node_modules/.bin/coveralls

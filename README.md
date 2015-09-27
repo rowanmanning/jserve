@@ -7,6 +7,7 @@ Serve up JSON files.
 [![NPM version][shield-npm]][info-npm]
 [![Node.js version support][shield-node]][info-node]
 [![Build status][shield-build]][info-build]
+[![Code coverage][shield-coverage]][info-coverage]
 [![Dependencies][shield-dependencies]][info-dependencies]
 [![MIT licensed][shield-license]][info-license]
 
@@ -251,13 +252,15 @@ Copyright &copy; 2015, Rowan Manning
 [mustache]: https://mustache.github.io/
 [npm]: https://www.npmjs.com/
 
+[info-coverage]: https://coveralls.io/github/rowanmanning/jserve
 [info-dependencies]: https://gemnasium.com/rowanmanning/jserve
 [info-license]: LICENSE
 [info-node]: package.json
 [info-npm]: https://www.npmjs.com/package/jserve
 [info-build]: https://travis-ci.org/rowanmanning/jserve
+[shield-coverage]: https://img.shields.io/coveralls/rowanmanning/jserve.svg
 [shield-dependencies]: https://img.shields.io/gemnasium/rowanmanning/jserve.svg
 [shield-license]: https://img.shields.io/badge/license-MIT-blue.svg
-[shield-node]: https://img.shields.io/badge/node.js%20support-0.10–4.0-brightgreen.svg
+[shield-node]: https://img.shields.io/badge/node.js%20support-0.10–4-brightgreen.svg
 [shield-npm]: https://img.shields.io/npm/v/jserve.svg
 [shield-build]: https://img.shields.io/travis/rowanmanning/jserve/master.svg
