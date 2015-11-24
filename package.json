@@ -19,22 +19,22 @@
     },
     "dependencies": {
         "chalk": "~1.1",
-        "commander": "~2.8",
+        "commander": "~2.9",
         "connect": "~3.4",
         "extend": "~3.0",
-        "glob": "~5.0",
+        "glob": "~6.0",
         "hogan.js": "~3.0",
         "serve-static": "~1.10",
         "statuses": "~1.2"
     },
     "devDependencies": {
-        "istanbul": "~0.3",
+        "istanbul": "~0.4",
         "jshint": "^2",
         "jscs": "^2",
         "mocha": "^2",
         "mockery": "~1.4",
         "proclaim": "^3",
-        "request": "2.61",
+        "request": "^2",
         "sinon": "^1"
     },
 
