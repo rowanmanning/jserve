@@ -20,6 +20,7 @@ Table Of Contents
 - [JavaScript Interface](#javascript-interface)
 - [Configuration](#configuration)
 - [Contributing](#contributing)
+- [Support and Migration](#support-and-migration)
 - [License](#license)
 
 
@@ -238,6 +239,21 @@ Please write unit tests for your code, and check that everything works by runnin
 ```sh
 make ci
 ```
+
+
+Support and Migration
+---------------------
+
+JServe major versions are normally supported for 6 months after their last minor release. This means that patch-level changes will be added and bugs will be fixed. The table below outlines the end-of-support dates for major versions, and the last minor release for that version.
+
+We also maintain a [migration guide](MIGRATION.md) to help you migrate.
+
+| :grey_question: | Major Version | Last Minor Release | Node.js Versions | Support End Date |
+| :-------------- | :------------ | :----------------- | :--------------- | :--------------- |
+| :heart:         | 2             | N/A                | 4+               | N/A              |
+| :hourglass:     | 1             | 1.2                | 0.10–5           | 2016-09-13       |
+
+If you're opening issues related to these, please mention the version that the issue relates to.
 
 
 License
