@@ -1,15 +1,14 @@
-// jshint maxstatements: false
-// jscs:disable maximumLineLength
+// jscs:disable maximumLineLength, requireArrowFunctions
 'use strict';
 
-var assert = require('proclaim');
-var request = require('request');
-var describeCall = require('./helper/describe-call');
+const assert = require('proclaim');
+const request = require('request');
+const describeCall = require('./helper/describe-call');
 
 describeCall([], function () {
 
     it('should serve JSON files', function (done) {
-        request(this.baseUrl + '/foo.json', function (error, response, body) {
+        request(`${this.baseUrl}/foo.json`, function (error, response, body) {
             assert.isNull(error);
             assert.strictEqual(response.statusCode, 200);
             assert.strictEqual(response.headers['content-type'], 'application/json');
@@ -19,7 +18,7 @@ describeCall([], function () {
     });
 
     it('should serve JavaScript files', function (done) {
-        request(this.baseUrl + '/requires', function (error, response, body) {
+        request(`${this.baseUrl}/requires`, function (error, response, body) {
             assert.isNull(error);
             assert.strictEqual(response.statusCode, 200);
             assert.strictEqual(response.headers['content-type'], 'application/json');
@@ -29,7 +28,7 @@ describeCall([], function () {
     });
 
     it('should serve JavaScript files in sub-directories', function (done) {
-        request(this.baseUrl + '/subdir/requires', function (error, response, body) {
+        request(`${this.baseUrl}/subdir/requires`, function (error, response, body) {
             assert.isNull(error);
             assert.strictEqual(response.statusCode, 200);
             assert.strictEqual(response.headers['content-type'], 'application/json');
@@ -49,7 +48,7 @@ describeCall([], function () {
     });
 
     it('should serve a 404 page', function (done) {
-        request(this.baseUrl + '/404', function (error, response, body) {
+        request(`${this.baseUrl}/404`, function (error, response, body) {
             assert.isNull(error);
             assert.strictEqual(response.statusCode, 404);
             assert.strictEqual(response.headers['content-type'], 'text/html');
@@ -59,7 +58,7 @@ describeCall([], function () {
     });
 
     it('should serve a 500 page', function (done) {
-        request(this.baseUrl + '/500', function (error, response, body) {
+        request(`${this.baseUrl}/500`, function (error, response, body) {
             assert.isNull(error);
             assert.strictEqual(response.statusCode, 500);
             assert.strictEqual(response.headers['content-type'], 'text/html');

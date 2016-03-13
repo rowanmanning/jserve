@@ -111,13 +111,13 @@ npm install jserve
 Require JServe:
 
 ```js
-var jserve = require('jserve');
+const jserve = require('jserve');
 ```
 
 Create a JServe application, [passing in options](#configuration):
 
 ```js
-var app = jserve({
+const app = jserve({
     // options
 });
 ```
@@ -137,7 +137,7 @@ Configuration
 _String_. The `Content-Type` header to send when serving JSON and JavaScript files. Default: `application/json`.
 
 ```js
-var app = jserve({
+const app = jserve({
     contentType: 'application/my-custom+json'
 });
 ```
@@ -147,17 +147,17 @@ var app = jserve({
 _String_. The descriptive text which appears above the file list in the index page. Default: `View JSON files by clicking the file names below:`.
 
 ```js
-var app = jserve({
+const app = jserve({
     description: 'Try one of these on for size:'
 });
 ```
 
 ### `indentation`
 
-_Number_ or _String. The indentation level to use for output JSON. If set to a number, indentation will be set to that number of spaces. If set to a string, the given string will be used to indent. Default: `4`.
+_Number_ or _String_. The indentation level to use for output JSON. If set to a number, indentation will be set to that number of spaces. If set to a string, the given string will be used to indent. Default: `4`.
 
 ```js
-var app = jserve({
+const app = jserve({
     indentation: '\t'
 });
 ```
@@ -167,7 +167,7 @@ var app = jserve({
 _Object_. An object with the methods `debug`, `error`, and `info` which will be used to report errors and request information. Default: no op functions.
 
 ```js
-var app = jserve({
+const app = jserve({
     log: {
         debug: console.log.bind(console),
         error: console.error.bind(console),
@@ -181,7 +181,7 @@ var app = jserve({
 _Array_. An array of [Connect][connect] middleware which will be run before the index and JSON serving parts of JServe. Along with the `template` option, this allows you to extend JServe easily with functionality of your own. Default: `[]`.
 
 ```js
-var app = jserve({
+const app = jserve({
     middleware: [
         function (request, response, next) {
             if (request.path === '/hello') {
@@ -198,7 +198,7 @@ var app = jserve({
 _String_. The name of the server, which appears in page titles and the logs. Default: `JServe`.
 
 ```js
-var app = jserve({
+const app = jserve({
     name: 'My JSON'
 });
 ```
@@ -208,8 +208,8 @@ var app = jserve({
 _String_. The path to look for JSON and JavaScript files in. It's best to set this to an absolute path. Default: `./json`.
 
 ```js
-var app = jserve({
-    path: __dirname + '/my-folder-of-json'
+const app = jserve({
+    path: `${__dirname}/my-folder-of-json`
 });
 ```
 
@@ -218,7 +218,7 @@ var app = jserve({
 _Number_. The port to bind the JServe application to. Default: The `PORT` environment variable or `3000`.
 
 ```js
-var app = jserve({
+const app = jserve({
     port: 1234
 });
 ```

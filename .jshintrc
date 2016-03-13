@@ -1,4 +1,5 @@
 {
+    "esversion": 6,
     "globals": {
         "after": true,
         "afterEach": true,
@@ -10,7 +11,6 @@
     "latedef": "nofunc",
     "maxparams": 4,
     "maxdepth": 2,
-    "maxstatements": 11,
     "maxcomplexity": 5,
     "node": true,
     "strict": true,

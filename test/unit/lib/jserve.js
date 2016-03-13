@@ -1,16 +1,23 @@
-// jshint maxstatements: false
-// jscs:disable maximumLineLength, disallowMultipleVarDecl
+// jscs:disable maximumLineLength
 'use strict';
 
-var assert = require('proclaim');
-var mockery = require('mockery');
-var path = require('path');
-var sinon = require('sinon');
+const assert = require('proclaim');
+const mockery = require('mockery');
+const path = require('path');
+const sinon = require('sinon');
 
-describe('lib/jserve', function () {
-    var connect, extend, fs, glob, hogan, jserve, serveStatic, statusMessages, vm;
+describe('lib/jserve', () => {
+    let connect;
+    let extend;
+    let fs;
+    let glob;
+    let hogan;
+    let jserve;
+    let serveStatic;
+    let statusMessages;
+    let vm;
 
-    beforeEach(function () {
+    beforeEach(() => {
 
         connect = require('../mock/connect');
         mockery.registerMock('connect', connect);
@@ -44,75 +51,81 @@ describe('lib/jserve', function () {
 
     });
 
-    it('should be a function', function () {
+    it('should be a function', () => {
         assert.isFunction(jserve);
     });
 
-    it('should have a `defaults` property', function () {
+    it('should have a `defaults` property', () => {
         assert.isObject(jserve.defaults);
     });
 
-    describe('.defaults', function () {
-        var defaults;
+    describe('.defaults', () => {
+        let defaults;
 
-        beforeEach(function () {
+        beforeEach(() => {
             defaults = jserve.defaults;
         });
 
-        it('should have a `contentType` property', function () {
+        it('should have a `contentType` property', () => {
             assert.strictEqual(defaults.contentType, 'application/json');
         });
 
-        it('should have a `description` property', function () {
+        it('should have a `description` property', () => {
             assert.strictEqual(defaults.description, 'View JSON files by clicking the file names below:');
         });
 
-        it('should have an `indentation` property', function () {
+        it('should have an `indentation` property', () => {
             assert.strictEqual(defaults.indentation, 4);
         });
 
-        it('should have a `log` property', function () {
+        it('should have a `log` property', () => {
             assert.isObject(defaults.log);
         });
 
-        it('should have a `log.debug` method', function () {
+        it('should have a `log.debug` method', () => {
             assert.isFunction(defaults.log.debug);
         });
 
-        it('should have a `log.error` method', function () {
+        it('should have a `log.error` method', () => {
             assert.isFunction(defaults.log.error);
         });
 
-        it('should have a `log.info` method', function () {
+        it('should have a `log.info` method', () => {
             assert.isFunction(defaults.log.info);
         });
 
-        it('should have a `middleware` property', function () {
+        it('should have a `middleware` property', () => {
             assert.deepEqual(defaults.middleware, []);
         });
 
-        it('should have a `name` property', function () {
+        it('should have a `name` property', () => {
             assert.strictEqual(defaults.name, 'JServe');
         });
 
-        it('should have a `path` property', function () {
-            assert.strictEqual(defaults.path, process.cwd() + '/json');
+        it('should have a `path` property', () => {
+            assert.strictEqual(defaults.path, path.join(process.cwd(), '/json'));
         });
 
-        it('should have a `port` property', function () {
+        it('should have a `port` property', () => {
             assert.strictEqual(defaults.port, process.env.PORT || 3000);
         });
 
-        it('should have a `templatesPath` property', function () {
+        it('should have a `templatesPath` property', () => {
             assert.strictEqual(defaults.templatesPath, path.resolve(__dirname, '..', '..', '..', 'template'));
         });
 
     });
 
-    describe('jserve()', function () {
-        var errorTemplate, indexTemplate, jserveApp, middleware1, middleware2, options, userOptions;
+    describe('jserve()', () => {
+        let errorTemplate;
+        let indexTemplate;
+        let jserveApp;
+        let middleware1;
+        let middleware2;
+        let options;
+        let userOptions;
 
-        beforeEach(function () {
+        beforeEach(() => {
             middleware1 = sinon.spy();
             middleware2 = sinon.spy();
 
@@ -130,7 +143,7 @@ describe('lib/jserve', function () {
                     middleware2
                 ],
                 name: 'foo-name',
-                path: path.resolve(__dirname + '/../mock'),
+                path: path.resolve(`${__dirname}/../mock`),
                 port: 1234,
                 templatesPath: '/can-haz-templates'
             };
@@ -152,7 +165,7 @@ describe('lib/jserve', function () {
             options = extend.firstCall.returnValue;
         });
 
-        it('should default the options', function () {
+        it('should default the options', () => {
             assert.calledOnce(extend);
             assert.isTrue(extend.firstCall.args[0]);
             assert.isObject(extend.firstCall.args[1]);
@@ -160,11 +173,11 @@ describe('lib/jserve', function () {
             assert.strictEqual(extend.firstCall.args[3], userOptions);
         });
 
-        it('should create a Connect application', function () {
+        it('should create a Connect application', () => {
             assert.calledOnce(connect);
         });
 
-        it('should load and compile the HTML templates, storing in the `templates` property', function () {
+        it('should load and compile the HTML templates, storing in the `templates` property', () => {
             assert.calledTwice(hogan.compile);
             assert.calledWithExactly(hogan.compile, 'error content');
             assert.calledWithExactly(hogan.compile, 'index content');
@@ -172,7 +185,7 @@ describe('lib/jserve', function () {
             assert.strictEqual(jserveApp.templates.index, indexTemplate);
         });
 
-        it('should create a serve-static middleware with the expected options', function () {
+        it('should create a serve-static middleware with the expected options', () => {
             assert.calledOnce(serveStatic);
             assert.alwaysCalledWith(serveStatic, path.resolve('/can-haz-templates/public'));
             assert.deepEqual(serveStatic.firstCall.args[1], {
@@ -180,40 +193,40 @@ describe('lib/jserve', function () {
             });
         });
 
-        it('should use the `logRequest` method as middleware in the Connect application', function () {
+        it('should use the `logRequest` method as middleware in the Connect application', () => {
             assert.calledWith(connect.mockReturn.use, jserveApp.logRequest);
         });
 
-        it('should use the `serveStaticFiles` method as middleware in the Connect application', function () {
+        it('should use the `serveStaticFiles` method as middleware in the Connect application', () => {
             assert.calledWith(connect.mockReturn.use, jserveApp.serveStaticFiles);
         });
 
-        it('should use the `removeExtension` method as middleware in the Connect application', function () {
+        it('should use the `removeExtension` method as middleware in the Connect application', () => {
             assert.calledWith(connect.mockReturn.use, jserveApp.removeExtension);
         });
 
-        it('should use all of the middleware in `options.middleware` in the Connect application', function () {
+        it('should use all of the middleware in `options.middleware` in the Connect application', () => {
             assert.calledWith(connect.mockReturn.use, middleware1);
             assert.calledWith(connect.mockReturn.use, middleware2);
         });
 
-        it('should use the `serveIndex` method as middleware in the Connect application', function () {
+        it('should use the `serveIndex` method as middleware in the Connect application', () => {
             assert.calledWith(connect.mockReturn.use, jserveApp.serveIndex);
         });
 
-        it('should use the `serveJson` method as middleware in the Connect application', function () {
+        it('should use the `serveJson` method as middleware in the Connect application', () => {
             assert.calledWith(connect.mockReturn.use, jserveApp.serveJson);
         });
 
-        it('should use the `handleNotFoundError` method as middleware in the Connect application', function () {
+        it('should use the `handleNotFoundError` method as middleware in the Connect application', () => {
             assert.calledWith(connect.mockReturn.use, jserveApp.handleNotFoundError);
         });
 
-        it('should use the `handleServerError` method as middleware in the Connect application', function () {
+        it('should use the `handleServerError` method as middleware in the Connect application', () => {
             assert.calledWith(connect.mockReturn.use, jserveApp.handleServerError);
         });
 
-        it('should use the middleware in the correct order', function () {
+        it('should use the middleware in the correct order', () => {
             assert.callOrder(
                 connect.mockReturn.use.withArgs(jserveApp.serveStaticFiles),
                 connect.mockReturn.use.withArgs(jserveApp.logRequest),
@@ -227,32 +240,33 @@ describe('lib/jserve', function () {
             );
         });
 
-        it('should return an object (jserve application)', function () {
+        it('should return an object (jserve application)', () => {
             assert.isObject(jserveApp);
         });
 
-        describe('jserve application', function () {
+        describe('jserve application', () => {
 
-            it('should have a `connect` property set to the created Connect application', function () {
+            it('should have a `connect` property set to the created Connect application', () => {
                 assert.strictEqual(jserveApp.connect, connect.mockReturn);
             });
 
-            it('should have a `log` property set to the `log` option', function () {
+            it('should have a `log` property set to the `log` option', () => {
                 assert.strictEqual(jserveApp.log, options.log);
             });
 
-            it('should have a `port` property set to the `port` option', function () {
+            it('should have a `port` property set to the `port` option', () => {
                 assert.strictEqual(jserveApp.port, options.port);
             });
 
-            it('should have a `logRequest` method', function () {
+            it('should have a `logRequest` method', () => {
                 assert.isFunction(jserveApp.logRequest);
             });
 
-            describe('.logRequest()', function () {
-                var next, request;
+            describe('.logRequest()', () => {
+                let next;
+                let request;
 
-                beforeEach(function () {
+                beforeEach(() => {
                     next = sinon.spy();
                     request = {
                         url: 'foo'
@@ -260,24 +274,26 @@ describe('lib/jserve', function () {
                     jserveApp.logRequest(request, {}, next);
                 });
 
-                it('should log the request', function () {
+                it('should log the request', () => {
                     assert.calledWithExactly(options.log.debug, 'Request to "%s"', 'foo');
                 });
 
-                it('should callback', function () {
+                it('should callback', () => {
                     assert.calledOnce(next);
                 });
 
             });
 
-            it('should have a `removeExtension` method', function () {
+            it('should have a `removeExtension` method', () => {
                 assert.isFunction(jserveApp.removeExtension);
             });
 
-            describe('.removeExtension()', function () {
-                var next, request, response;
+            describe('.removeExtension()', () => {
+                let next;
+                let request;
+                let response;
 
-                beforeEach(function () {
+                beforeEach(() => {
                     next = sinon.spy();
                     request = {
                         url: 'http://localhost/foo/bar.json?a=b'
@@ -289,11 +305,11 @@ describe('lib/jserve', function () {
                     jserveApp.removeExtension(request, response, next);
                 });
 
-                it('should store the URL path on the request', function () {
+                it('should store the URL path on the request', () => {
                     assert.strictEqual(request.path, '/foo/bar.json');
                 });
 
-                it('should redirect the request to the equivalent path without an extension', function () {
+                it('should redirect the request to the equivalent path without an extension', () => {
                     assert.calledOnce(response.writeHead);
                     assert.calledWith(response.writeHead, 301);
                     assert.deepEqual(response.writeHead.firstCall.args[1], {
@@ -303,11 +319,11 @@ describe('lib/jserve', function () {
                     assert.calledWithExactly(response.end);
                 });
 
-                it('should not callback', function () {
+                it('should not callback', () => {
                     assert.notCalled(next);
                 });
 
-                it('should callback if no file extension is present', function () {
+                it('should callback if no file extension is present', () => {
                     request.url = 'http://localhost/foo/bar?a=b';
                     jserveApp.removeExtension(request, response, next);
                     assert.calledOnce(next);
@@ -315,14 +331,19 @@ describe('lib/jserve', function () {
 
             });
 
-            it('should have a `serveIndex` method', function () {
+            it('should have a `serveIndex` method', () => {
                 assert.isFunction(jserveApp.serveIndex);
             });
 
-            describe('.serveIndex()', function () {
-                var files, globPattern, html, next, request, response;
+            describe('.serveIndex()', () => {
+                let files;
+                let globPattern;
+                let html;
+                let next;
+                let request;
+                let response;
 
-                beforeEach(function () {
+                beforeEach(() => {
                     files = [
                         'foo-file',
                         'bar-file',
@@ -332,7 +353,7 @@ describe('lib/jserve', function () {
                     jserveApp.buildFileObject.withArgs('foo-file').returns('foo-built-file');
                     jserveApp.buildFileObject.withArgs('bar-file').returns('bar-built-file');
                     jserveApp.buildFileObject.withArgs('baz-file').returns('baz-built-file');
-                    globPattern = options.path + '/**/*.{js,json}';
+                    globPattern = `${options.path}/**/*.{js,json}`;
                     glob.withArgs(globPattern).yields(null, files);
                     html = '<p>index content</p>';
                     indexTemplate.render.returns(html);
@@ -347,19 +368,19 @@ describe('lib/jserve', function () {
                     jserveApp.serveIndex(request, response, next);
                 });
 
-                it('should glob for files', function () {
+                it('should glob for files', () => {
                     assert.calledOnce(glob);
                     assert.calledWith(glob, globPattern);
                 });
 
-                it('should call `buildFileObject` with each file that the glob returns', function () {
+                it('should call `buildFileObject` with each file that the glob returns', () => {
                     assert.calledThrice(jserveApp.buildFileObject);
                     assert.calledWith(jserveApp.buildFileObject, 'foo-file');
                     assert.calledWith(jserveApp.buildFileObject, 'bar-file');
                     assert.calledWith(jserveApp.buildFileObject, 'baz-file');
                 });
 
-                it('should render the index page with the expected context', function () {
+                it('should render the index page with the expected context', () => {
                     assert.calledOnce(indexTemplate.render);
                     assert.deepEqual(indexTemplate.render.firstCall.args[0], {
                         name: 'foo-name',
@@ -372,31 +393,31 @@ describe('lib/jserve', function () {
                     });
                 });
 
-                it('should set the response status to 200', function () {
+                it('should set the response status to 200', () => {
                     assert.calledOnce(response.writeHead);
                     assert.calledWith(response.writeHead, 200);
                 });
 
-                it('should set the Content-Type header to "text/html"', function () {
+                it('should set the Content-Type header to "text/html"', () => {
                     assert.calledOnce(response.writeHead);
                     assert.isObject(response.writeHead.firstCall.args[1]);
                     assert.strictEqual(response.writeHead.firstCall.args[1]['Content-Type'], 'text/html');
                 });
 
-                it('should send the render output', function () {
+                it('should send the render output', () => {
                     assert.calledOnce(response.end);
                     assert.calledWithExactly(response.end, html);
                 });
 
-                it('should callback with an error if the glob fails', function () {
-                    var error = new Error('...');
+                it('should callback with an error if the glob fails', () => {
+                    const error = new Error('...');
                     glob.withArgs(globPattern).yields(error);
                     jserveApp.serveIndex(request, response, next);
                     assert.calledOnce(next);
                     assert.calledWithExactly(next, error);
                 });
 
-                it('should callback if the request path is not "/"', function () {
+                it('should callback if the request path is not "/"', () => {
                     request.path = '/foo';
                     jserveApp.serveIndex(request, response, next);
                     assert.calledOnce(next);
@@ -404,14 +425,17 @@ describe('lib/jserve', function () {
 
             });
 
-            it('should have a `serveJson` method', function () {
+            it('should have a `serveJson` method', () => {
                 assert.isFunction(jserveApp.serveJson);
             });
 
-            describe('.serveJson()', function () {
-                var jsonData, next, request, response;
+            describe('.serveJson()', () => {
+                let jsonData;
+                let next;
+                let request;
+                let response;
 
-                beforeEach(function () {
+                beforeEach(() => {
                     jsonData = {
                         foo: 'bar'
                     };
@@ -423,39 +447,39 @@ describe('lib/jserve', function () {
                     };
                 });
 
-                describe('with a JSON file', function () {
+                describe('with a JSON file', () => {
 
-                    beforeEach(function () {
+                    beforeEach(() => {
                         request.path = '/foo/bar';
                         jserveApp.serveJson(request, response, next);
                     });
 
-                    it('should send a 200 status code', function () {
+                    it('should send a 200 status code', () => {
                         assert.calledOnce(response.writeHead);
                         assert.calledWith(response.writeHead, 200);
                     });
 
-                    it('should send a Content-Type header based on the `contentType` option', function () {
+                    it('should send a Content-Type header based on the `contentType` option', () => {
                         assert.isObject(response.writeHead.firstCall.args[1]);
                         assert.strictEqual(response.writeHead.firstCall.args[1]['Content-Type'], options.contentType);
                     });
 
-                    it('should send the json output as a string (respecting the `indentation` option)', function () {
+                    it('should send the json output as a string (respecting the `indentation` option)', () => {
                         assert.calledOnce(response.end);
                         assert.calledWithExactly(response.end, '{\n   "foo": "bar"\n}');
                     });
 
-                    it('should not callback', function () {
+                    it('should not callback', () => {
                         assert.notCalled(next);
                     });
 
-                    it('should callback if the requested file does not exist', function () {
+                    it('should callback if the requested file does not exist', () => {
                         request.path = '/foo/not-a-file';
                         jserveApp.serveJson(request, response, next);
                         assert.calledOnce(next);
                     });
 
-                    it('should callback with an error if the file contains errors', function () {
+                    it('should callback with an error if the file contains errors', () => {
                         request.path = '/foo/json-error';
                         jserveApp.serveJson(request, response, next);
                         assert.calledOnce(next);
@@ -464,33 +488,33 @@ describe('lib/jserve', function () {
 
                 });
 
-                describe('with a JavaScript file', function () {
+                describe('with a JavaScript file', () => {
 
-                    beforeEach(function () {
+                    beforeEach(() => {
                         request.path = '/foo/baz';
                         jserveApp.serveJson(request, response, next);
                     });
 
-                    it('should send a 200 status code', function () {
+                    it('should send a 200 status code', () => {
                         assert.calledOnce(response.writeHead);
                         assert.calledWith(response.writeHead, 200);
                     });
 
-                    it('should send a Content-Type header based on the `contentType` option', function () {
+                    it('should send a Content-Type header based on the `contentType` option', () => {
                         assert.isObject(response.writeHead.firstCall.args[1]);
                         assert.strictEqual(response.writeHead.firstCall.args[1]['Content-Type'], options.contentType);
                     });
 
-                    it('should send the json output as a string (respecting the `indentation` option)', function () {
+                    it('should send the json output as a string (respecting the `indentation` option)', () => {
                         assert.calledOnce(response.end);
                         assert.calledWithExactly(response.end, '{\n   "bar": "baz"\n}');
                     });
 
-                    it('should not callback', function () {
+                    it('should not callback', () => {
                         assert.notCalled(next);
                     });
 
-                    it('should callback if the requested file does not exist', function () {
+                    it('should callback if the requested file does not exist', () => {
                         request.path = '/foo/not-a-file';
                         jserveApp.serveJson(request, response, next);
                         assert.calledOnce(next);
@@ -500,23 +524,23 @@ describe('lib/jserve', function () {
 
             });
 
-            it('should have a `serveStaticFiles` method set to the created serve-static middleware', function () {
+            it('should have a `serveStaticFiles` method set to the created serve-static middleware', () => {
                 assert.strictEqual(jserveApp.serveStaticFiles, serveStatic.mockReturn);
             });
 
-            it('should have a `handleNotFoundError` method', function () {
+            it('should have a `handleNotFoundError` method', () => {
                 assert.isFunction(jserveApp.handleNotFoundError);
             });
 
-            describe('.handleNotFoundError()', function () {
-                var next;
+            describe('.handleNotFoundError()', () => {
+                let next;
 
-                beforeEach(function () {
+                beforeEach(() => {
                     next = sinon.spy();
                     jserveApp.handleNotFoundError({}, {}, next);
                 });
 
-                it('should callback with a 404 error object', function () {
+                it('should callback with a 404 error object', () => {
                     assert.calledOnce(next);
                     assert.instanceOf(next.firstCall.args[0], Error);
                     assert.strictEqual(next.firstCall.args[0].status, 404);
@@ -525,14 +549,16 @@ describe('lib/jserve', function () {
 
             });
 
-            it('should have a `handleServerError` method', function () {
+            it('should have a `handleServerError` method', () => {
                 assert.isFunction(jserveApp.handleServerError);
             });
 
-            describe('.handleServerError()', function () {
-                var error, html, response;
+            describe('.handleServerError()', () => {
+                let error;
+                let html;
+                let response;
 
-                beforeEach(function () {
+                beforeEach(() => {
                     error = {
                         stack: 'stack',
                         status: 567
@@ -546,18 +572,18 @@ describe('lib/jserve', function () {
                     jserveApp.handleServerError(error, {}, response);
                 });
 
-                it('should log the error stack', function () {
+                it('should log the error stack', () => {
                     assert.calledWith(jserveApp.log.error, 'stack');
                 });
 
-                it('should not log the error stack if the error status is 404', function () {
+                it('should not log the error stack if the error status is 404', () => {
                     error.status = 404;
                     jserveApp.log.error.reset();
                     jserveApp.handleServerError(error, {}, response);
                     assert.notCalled(jserveApp.log.error);
                 });
 
-                it('should render the error page with the expected context', function () {
+                it('should render the error page with the expected context', () => {
                     assert.calledOnce(errorTemplate.render);
                     assert.deepEqual(errorTemplate.render.firstCall.args[0], {
                         name: 'foo-name',
@@ -569,23 +595,23 @@ describe('lib/jserve', function () {
                     });
                 });
 
-                it('should set the response status based on the error status', function () {
+                it('should set the response status based on the error status', () => {
                     assert.calledOnce(response.writeHead);
                     assert.calledWith(response.writeHead, error.status);
                 });
 
-                it('should set the Content-Type header to "text/html"', function () {
+                it('should set the Content-Type header to "text/html"', () => {
                     assert.calledOnce(response.writeHead);
                     assert.isObject(response.writeHead.firstCall.args[1]);
                     assert.strictEqual(response.writeHead.firstCall.args[1]['Content-Type'], 'text/html');
                 });
 
-                it('should send the render output', function () {
+                it('should send the render output', () => {
                     assert.calledOnce(response.end);
                     assert.calledWithExactly(response.end, html);
                 });
 
-                it('should default the status code to 500 if the error does not have one', function () {
+                it('should default the status code to 500 if the error does not have one', () => {
                     delete error.status;
                     errorTemplate.render.reset();
                     response.writeHead.reset();
@@ -595,7 +621,7 @@ describe('lib/jserve', function () {
                     assert.strictEqual(errorTemplate.render.firstCall.args[0].statusMessage, statusMessages[500]);
                 });
 
-                it('should default the status message to "Error" if the status code is not known', function () {
+                it('should default the status message to "Error" if the status code is not known', () => {
                     error.status = 678;
                     errorTemplate.render.reset();
                     jserveApp.handleServerError(error, {}, response);
@@ -604,16 +630,16 @@ describe('lib/jserve', function () {
 
             });
 
-            it('should have a `buildFileObject` method', function () {
+            it('should have a `buildFileObject` method', () => {
                 assert.isFunction(jserveApp.buildFileObject);
             });
 
-            describe('.buildFileObject()', function () {
+            describe('.buildFileObject()', () => {
 
-                it('should return the expected object when called with a file path', function () {
-                    assert.deepEqual(jserveApp.buildFileObject(options.path + '/foo/bar/baz.JSON'), {
+                it('should return the expected object when called with a file path', () => {
+                    assert.deepEqual(jserveApp.buildFileObject(`${options.path}/foo/bar/baz.JSON`), {
                         extension: 'json',
-                        fullPath: options.path + '/foo/bar/baz.JSON',
+                        fullPath: `${options.path}/foo/bar/baz.JSON`,
                         name: 'foo/bar/baz',
                         nameSplit: [
                             'foo',
@@ -626,30 +652,30 @@ describe('lib/jserve', function () {
 
             });
 
-            it('should have a `start` method', function () {
+            it('should have a `start` method', () => {
                 assert.isFunction(jserveApp.start);
             });
 
-            describe('.start()', function () {
-                var returnValue;
+            describe('.start()', () => {
+                let returnValue;
 
-                beforeEach(function () {
+                beforeEach(() => {
                     jserveApp.connect.listen.yields(null);
                     returnValue = jserveApp.start();
                 });
 
-                it('should start the Connect application with `options.port`', function () {
+                it('should start the Connect application with `options.port`', () => {
                     assert.calledOnce(jserveApp.connect.listen);
                     assert.calledWith(jserveApp.connect.listen, options.port);
                 });
 
-                it('should return the calling application', function () {
+                it('should return the calling application', () => {
                     assert.strictEqual(returnValue, jserveApp);
                 });
 
-                it('should exit the process if the Connect application fails to start', function () {
-                    var error = new Error('...');
-                    var processExitCalls = 0;
+                it('should exit the process if the Connect application fails to start', () => {
+                    const error = new Error('...');
+                    let processExitCalls = 0;
                     sinon.stub(process, 'exit');
                     jserveApp.connect.listen.reset();
                     jserveApp.connect.listen.yields(error);
@@ -659,8 +685,8 @@ describe('lib/jserve', function () {
                     assert.strictEqual(processExitCalls, 1);
                 });
 
-                it('should callback if one is provided', function () {
-                    var callback = sinon.spy();
+                it('should callback if one is provided', () => {
+                    const callback = sinon.spy();
                     returnValue = jserveApp.start(callback);
                     assert.calledOnce(callback);
                 });

@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 'use strict';
 
-var chalk = require('chalk');
-var jserve = require('../');
-var path = require('path');
-var pkg = require('../package.json');
-var program = require('commander');
+const chalk = require('chalk');
+const jserve = require('../');
+const path = require('path');
+const pkg = require('../package.json');
+const program = require('commander');
 
 program
     .version(pkg.version)
@@ -54,7 +54,7 @@ if (program.templates && !/^[\/\~]/.test(program.templates)) {
     program.templates = path.resolve(process.cwd(), program.templates);
 }
 
-var app = jserve({
+const app = jserve({
     contentType: program.contentType,
     indentation: program.indentation,
     log: {

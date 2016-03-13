@@ -1,7 +1,7 @@
 'use strict';
 
-var sinon = require('sinon');
+const sinon = require('sinon');
 
-var serveStatic = module.exports = sinon.stub();
+const serveStatic = module.exports = sinon.stub();
 serveStatic.mockReturn = sinon.spy();
 serveStatic.returns(serveStatic.mockReturn);

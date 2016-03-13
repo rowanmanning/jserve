@@ -1,8 +1,8 @@
 'use strict';
 
-var sinon = require('sinon');
+const sinon = require('sinon');
 
-var connect = module.exports = sinon.stub();
+const connect = module.exports = sinon.stub();
 connect.mockReturn = {
     listen: sinon.stub(),
     use: sinon.stub()
