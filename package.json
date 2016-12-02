@@ -1,48 +1,47 @@
 {
-    "name": "jserve",
-    "version": "2.0.1",
-
-    "description": "Serve up JSON files",
-    "keywords": [ "json", "server" ],
-    "author": "Rowan Manning (http://rowanmanning.com/)",
-
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/rowanmanning/jserve.git"
-    },
-    "homepage": "https://github.com/rowanmanning/jserve",
-    "bugs": "https://github.com/rowanmanning/jserve/issues",
-    "license": "MIT",
-
-    "engines": {
-        "node": ">=4"
-    },
-    "dependencies": {
-        "chalk": "~1.1",
-        "commander": "~2.9",
-        "connect": "~3.4",
-        "extend": "~3.0",
-        "glob": "~7.0",
-        "hogan.js": "~3.0",
-        "serve-static": "~1.10",
-        "statuses": "~1.2"
-    },
-    "devDependencies": {
-        "istanbul": "~0.4",
-        "jshint": "^2",
-        "jscs": "^2",
-        "mocha": "^2",
-        "mockery": "^1",
-        "proclaim": "^3",
-        "request": "^2",
-        "sinon": "^1"
-    },
-
-    "main": "./lib/jserve.js",
-    "bin": {
-        "jserve": "./bin/jserve.js"
-    },
-    "scripts": {
-        "test": "make ci"
-    }
+  "name": "jserve",
+  "version": "2.0.1",
+  "description": "Serve up JSON files",
+  "keywords": [
+    "json",
+    "server"
+  ],
+  "author": "Rowan Manning (http://rowanmanning.com/)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rowanmanning/jserve.git"
+  },
+  "homepage": "https://github.com/rowanmanning/jserve",
+  "bugs": "https://github.com/rowanmanning/jserve/issues",
+  "license": "MIT",
+  "engines": {
+    "node": ">=4"
+  },
+  "dependencies": {
+    "chalk": "~1.1",
+    "commander": "~2.9",
+    "connect": "~3.4",
+    "extend": "~3.0",
+    "glob": "~7.0",
+    "hogan.js": "~3.0",
+    "serve-static": "~1.10",
+    "statuses": "~1.2"
+  },
+  "devDependencies": {
+    "istanbul": "~0.4",
+    "jshint": "^2",
+    "jscs": "^2",
+    "mocha": "^2",
+    "mockery": "^1",
+    "proclaim": "^3",
+    "request": "^2",
+    "sinon": "^1"
+  },
+  "main": "./lib/jserve.js",
+  "bin": {
+    "jserve": "./bin/jserve.js"
+  },
+  "scripts": {
+    "test": "make ci"
+  }
 }
