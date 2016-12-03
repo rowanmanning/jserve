@@ -1,6 +1,6 @@
 {
   "name": "jserve",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Serve up JSON files",
   "keywords": [
     "json",
