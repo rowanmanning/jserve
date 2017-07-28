@@ -1,6 +1,16 @@
 
 # Changelog
 
+## 2.0.3 (2017-07-28)
+
+  * Add Node.js 8.x support
+  * Update dependencies
+
+## 2.0.2 (2016-12-03)
+
+  * Add Node.js 7.x support
+  * Update tooling
+
 ## 2.0.1 (2016-05-02)
 
   * Add Node.js 6.x support
