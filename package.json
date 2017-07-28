@@ -20,11 +20,11 @@
   "dependencies": {
     "chalk": "~1.1",
     "commander": "~2.9",
-    "connect": "~3.4",
+    "connect": "~3.6.2",
     "extend": "~3.0",
     "glob": "~7.0",
     "hogan.js": "~3.0",
-    "serve-static": "~1.10",
+    "serve-static": "~1.12.3",
     "statuses": "~1.2"
   },
   "devDependencies": {
