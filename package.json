@@ -31,7 +31,7 @@
     "istanbul": "^0.4.5",
     "jscs": "^3.0.7",
     "jshint": "^2.9.5",
-    "mocha": "^3.4.2",
+    "mocha": "^9.0.1",
     "mockery": "^2.1.0",
     "proclaim": "^3.4.5",
     "request": "^2.81.0",
