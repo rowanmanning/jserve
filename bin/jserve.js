@@ -37,34 +37,36 @@ program
 	)
 	.parse(process.argv);
 
-if (program.indentation) {
-	if (/^\d+$/.test(program.indentation)) {
-		program.indentation = parseInt(program.indentation, 10);
-	} else if (/^\\*t$/.test(program.indentation)) {
-		program.indentation = '\t';
+const opts = program.opts();
+
+if (opts.indentation) {
+	if (/^\d+$/.test(opts.indentation)) {
+		opts.indentation = parseInt(opts.indentation, 10);
+	} else if (/^\\*t$/.test(opts.indentation)) {
+		opts.indentation = '\t';
 	}
 }
 
-if (program.json && !/^[/~]/.test(program.json)) {
-	program.json = path.resolve(process.cwd(), program.json);
+if (opts.json && !/^[/~]/.test(opts.json)) {
+	opts.json = path.resolve(process.cwd(), opts.json);
 }
 
-if (program.templates && !/^[/~]/.test(program.templates)) {
-	program.templates = path.resolve(process.cwd(), program.templates);
+if (opts.templates && !/^[/~]/.test(opts.templates)) {
+	opts.templates = path.resolve(process.cwd(), opts.templates);
 }
 
 const app = jserve({
-	contentType: program.contentType,
-	indentation: program.indentation,
+	contentType: opts.contentType,
+	indentation: opts.indentation,
 	log: {
 		debug: logDebug,
 		error: logError,
 		info: logInfo
 	},
-	name: program.name,
-	path: program.json,
-	port: program.port,
-	templatesPath: program.templates
+	name: opts.name,
+	path: opts.json,
+	port: opts.port,
+	templatesPath: opts.templates
 });
 
 app.start();
