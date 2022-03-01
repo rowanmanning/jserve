@@ -3,5 +3,5 @@
 const sinon = require('sinon');
 
 module.exports = {
-    compile: sinon.stub()
+	compile: sinon.stub()
 };

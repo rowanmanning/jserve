@@ -3,5 +3,5 @@
 const sinon = require('sinon');
 
 module.exports = {
-    runInNewContext: sinon.stub()
+	runInNewContext: sinon.stub()
 };

@@ -1,5 +1,5 @@
 'use strict';
 
 module.exports = {
-    bar: 'baz'
+	bar: 'baz'
 };

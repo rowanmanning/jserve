@@ -1,31 +1,31 @@
 
-JServe
-=======
+# JServe
 
 Serve up JSON files.
 
-[![NPM version][shield-npm]][info-npm]
-[![Node.js version support][shield-node]][info-node]
-[![Build status][shield-build]][info-build]
-[![Code coverage][shield-coverage]][info-coverage]
-[![Dependencies][shield-dependencies]][info-dependencies]
-[![MIT licensed][shield-license]][info-license]
+
+## Table of Contents
+
+  * [Requirements](#requirements)
+  * [Usage](#usage)
+    * [Serving JSON Files](#serving-json-files)
+    * [Command-Line Interface](#command-line-interface)
+    * [JavaScript Interface](#javascript-interface)
+    * [Configuration](#configuration)
+  * [Contributing](#contributing)
+  * [License](#license)
 
 
-Table Of Contents
------------------
+## Requirements
 
-- [Serving JSON Files](#serving-json-files)
-- [Command-Line Interface](#command-line-interface)
-- [JavaScript Interface](#javascript-interface)
-- [Configuration](#configuration)
-- [Contributing](#contributing)
-- [Support and Migration](#support-and-migration)
-- [License](#license)
+This library requires the following to run:
+
+  * [Node.js](https://nodejs.org/) 12+
 
 
-Serving JSON Files
-------------------
+## Usage
+
+### Serving JSON Files
 
 ![The JServe Index Page](screenshot.png)
 
@@ -55,10 +55,9 @@ module.exports = {
 These JavaScript files are run in a limited Node.js sandbox to prevent them from crashing JServe.
 
 
-Command-Line Interface
-----------------------
+### Command-Line Interface
 
-Install JServe globally with [npm][npm]:
+Install JServe globally with [npm](https://www.npmjs.com/):
 
 ```sh
 npm install -g jserve
@@ -100,8 +99,7 @@ jserve --content-type application/my-custom+json --indentation \t
 ```
 
 
-JavaScript Interface
---------------------
+### JavaScript Interface
 
 Install JServe with [npm][npm] or add to your `package.json`:
 
@@ -130,10 +128,9 @@ app.start();
 ```
 
 
-Configuration
--------------
+### Configuration
 
-### `contentType`
+#### `contentType`
 
 _String_. The `Content-Type` header to send when serving JSON and JavaScript files. Default: `application/json`.
 
@@ -143,7 +140,7 @@ const app = jserve({
 });
 ```
 
-### `description`
+#### `description`
 
 _String_. The descriptive text which appears above the file list in the index page. Default: `View JSON files by clicking the file names below:`.
 
@@ -153,7 +150,7 @@ const app = jserve({
 });
 ```
 
-### `indentation`
+#### `indentation`
 
 _Number_ or _String_. The indentation level to use for output JSON. If set to a number, indentation will be set to that number of spaces. If set to a string, the given string will be used to indent. Default: `4`.
 
@@ -163,7 +160,7 @@ const app = jserve({
 });
 ```
 
-### `log`
+#### `log`
 
 _Object_. An object with the methods `debug`, `error`, and `info` which will be used to report errors and request information. Default: no op functions.
 
@@ -177,9 +174,9 @@ const app = jserve({
 });
 ```
 
-### `middleware`
+#### `middleware`
 
-_Array_. An array of [Connect][connect] middleware which will be run before the index and JSON serving parts of JServe. Along with the `template` option, this allows you to extend JServe easily with functionality of your own. Default: `[]`.
+_Array_. An array of [Connect](https://github.com/senchalabs/connect) middleware which will be run before the index and JSON serving parts of JServe. Along with the `template` option, this allows you to extend JServe easily with functionality of your own. Default: `[]`.
 
 ```js
 const app = jserve({
@@ -194,7 +191,7 @@ const app = jserve({
 });
 ```
 
-### `name`
+#### `name`
 
 _String_. The name of the server, which appears in page titles and the logs. Default: `JServe`.
 
@@ -204,7 +201,7 @@ const app = jserve({
 });
 ```
 
-### `path`
+#### `path`
 
 _String_. The path to look for JSON and JavaScript files in. It's best to set this to an absolute path. Default: `./json`.
 
@@ -214,7 +211,7 @@ const app = jserve({
 });
 ```
 
-### `port`
+#### `port`
 
 _Number_. The port to bind the JServe application to. Default: The `PORT` environment variable or `3000`.
 
@@ -224,59 +221,17 @@ const app = jserve({
 });
 ```
 
-### `templatesPath`
+#### `templatesPath`
 
-_String_. The path that JServe should look for HTML templates in. JServe expects to find at least two files in the given directory: `error.html` and `index.html`. These templates are written in [Mustache][mustache]. Default: [`<core>/template`](template).
-
-
-Contributing
-------------
-
-To contribute to JServe, clone this repo locally and commit your code on a separate branch.
-
-Please write unit tests for your code, and check that everything works by running the following before opening a pull-request:
-
-```sh
-make ci
-```
+_String_. The path that JServe should look for HTML templates in. JServe expects to find at least two files in the given directory: `error.html` and `index.html`. These templates are written in [Mustache](https://mustache.github.io/). Default: [`<core>/template`](template).
 
 
-Support and Migration
----------------------
+## Contributing
 
-JServe major versions are normally supported for 6 months after their last minor release. This means that patch-level changes will be added and bugs will be fixed. The table below outlines the end-of-support dates for major versions, and the last minor release for that version.
-
-We also maintain a [migration guide](MIGRATION.md) to help you migrate.
-
-| :grey_question: | Major Version | Last Minor Release | Node.js Versions | Support End Date |
-| :-------------- | :------------ | :----------------- | :--------------- | :--------------- |
-| :heart:         | 2             | N/A                | 4+               | N/A              |
-| :hourglass:     | 1             | 1.2                | 0.10–5           | 2016-09-13       |
-
-If you're opening issues related to these, please mention the version that the issue relates to.
+[The contributing guide is available here](docs/contributing.md). All contributors must follow [this library's code of conduct](docs/code_of_conduct.md).
 
 
-License
--------
+## License
 
-JServe is licensed under the [MIT][info-license] license.  
+Licensed under the [MIT](LICENSE) license.<br/>
 Copyright &copy; 2015, Rowan Manning
-
-
-
-[connect]: https://github.com/senchalabs/connect
-[mustache]: https://mustache.github.io/
-[npm]: https://www.npmjs.com/
-
-[info-coverage]: https://coveralls.io/github/rowanmanning/jserve
-[info-dependencies]: https://gemnasium.com/rowanmanning/jserve
-[info-license]: LICENSE
-[info-node]: package.json
-[info-npm]: https://www.npmjs.com/package/jserve
-[info-build]: https://travis-ci.org/rowanmanning/jserve
-[shield-coverage]: https://img.shields.io/coveralls/rowanmanning/jserve.svg
-[shield-dependencies]: https://img.shields.io/gemnasium/rowanmanning/jserve.svg
-[shield-license]: https://img.shields.io/badge/license-MIT-blue.svg
-[shield-node]: https://img.shields.io/badge/node.js%20support-4–7-brightgreen.svg
-[shield-npm]: https://img.shields.io/npm/v/jserve.svg
-[shield-build]: https://img.shields.io/travis/rowanmanning/jserve/master.svg

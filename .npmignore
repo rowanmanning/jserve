@@ -1,0 +1,7 @@
+.eslintrc.json
+.github
+.nyc_output
+coverage
+docs
+screenshot.png
+test
