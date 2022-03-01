@@ -14,7 +14,7 @@ describe('lib/jserve', () => {
 	let hogan;
 	let jserve;
 	let serveStatic;
-	let statusMessages;
+	let status;
 	let vm;
 
 	beforeEach(() => {
@@ -37,12 +37,14 @@ describe('lib/jserve', () => {
 		serveStatic = require('../mock/serve-static');
 		mockery.registerMock('serve-static', serveStatic);
 
-		statusMessages = {
-			404: 'foo',
-			500: 'bar',
-			567: 'baz'
+		status = {
+			message: {
+				404: 'foo',
+				500: 'bar',
+				567: 'baz'
+			}
 		};
-		mockery.registerMock('statuses', statusMessages);
+		mockery.registerMock('statuses', status);
 
 		vm = require('../mock/vm');
 		mockery.registerMock('vm', vm);
@@ -540,7 +542,7 @@ describe('lib/jserve', () => {
 					assert.calledOnce(next);
 					assert.instanceOf(next.firstCall.args[0], Error);
 					assert.strictEqual(next.firstCall.args[0].status, 404);
-					assert.strictEqual(next.firstCall.args[0].message, statusMessages[404]);
+					assert.strictEqual(next.firstCall.args[0].message, status.message[404]);
 				});
 
 			});
@@ -586,7 +588,7 @@ describe('lib/jserve', () => {
 						description: 'foo-description',
 						is404: false,
 						statusCode: error.status,
-						statusMessage: statusMessages[error.status],
+						statusMessage: status.message[error.status],
 						stackTrace: error.stack
 					});
 				});
@@ -614,7 +616,7 @@ describe('lib/jserve', () => {
 					jserveApp.handleServerError(error, {}, response);
 					assert.calledWith(response.writeHead, 500);
 					assert.strictEqual(errorTemplate.render.firstCall.args[0].statusCode, 500);
-					assert.strictEqual(errorTemplate.render.firstCall.args[0].statusMessage, statusMessages[500]);
+					assert.strictEqual(errorTemplate.render.firstCall.args[0].statusMessage, status.message[500]);
 				});
 
 				it('should default the status message to "Error" if the status code is not known', () => {
